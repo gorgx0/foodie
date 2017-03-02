@@ -19,6 +19,15 @@
         <module>model</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.14</version>
+        </dependency>
+
+    </dependencies>
+
 
     <build>
         <resources>
