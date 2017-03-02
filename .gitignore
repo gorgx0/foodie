@@ -2,4 +2,6 @@
 **/*.iml
 client/target/
 server/target/
+model/target/
+target/
 
