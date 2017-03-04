@@ -9,6 +9,7 @@ target/
 # compiled output
 /client/src/main/angular/dist
 /client/src/main/angular/tmp
+/client/src/main/angular/node/
 
 # dependencies
 /client/src/main/angular/node_modules
