@@ -1,0 +1,12 @@
+.restaurantList {
+    list-style: none;
+}
+
+.restaurants {
+    margin-top: 10vh;
+    text-align: center;
+}
+
+.restaurantListItem {
+    margin-top: 4vh;
+}

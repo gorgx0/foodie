@@ -1,0 +1,10 @@
+<div class="restaurants">
+    <ul class="restaurantList">
+        <li *ngFor="let restaurant of restaurants" class="restaurantListItem">
+            <button type="button" class="btn btn-default btn-block">
+                {{restaurant.name}}
+                <span class="badge pull-right">{{restaurant.count}}</span>
+            </button>
+        </li>
+    </ul>
+</div>

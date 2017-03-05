@@ -20,7 +20,11 @@ public class RestaurantControler {
     Collection<Restaurant> getRestaurants() {
         return Arrays.asList(
                 new Restaurant("restaurant01", true, BigDecimal.ZERO),
-                new Restaurant("restaurant02", true, BigDecimal.TEN)
+                new Restaurant("restaurant02", true, BigDecimal.ZERO),
+                new Restaurant("restaurant03", true, BigDecimal.ZERO),
+                new Restaurant("restaurant04", true, BigDecimal.ZERO),
+                new Restaurant("restaurant05", true, BigDecimal.ZERO),
+                new Restaurant("restaurant06", true, BigDecimal.TEN)
         );
     }
 
