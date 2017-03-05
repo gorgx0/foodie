@@ -18,4 +18,9 @@ export class RestaurantsComponent implements OnInit {
     ngOnInit() {
     }
 
+
+    onClick(restaurant) {
+        console.log(`Restaurant clicked`);
+        console.log(restaurant);
+    }
 }
