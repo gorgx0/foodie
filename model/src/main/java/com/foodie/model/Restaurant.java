@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class Restaurant {
 
+    private Long id;
     private String name ;
     private Boolean active ;
     private BigDecimal deliveryFee ;
