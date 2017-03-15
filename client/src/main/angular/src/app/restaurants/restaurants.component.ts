@@ -10,12 +10,10 @@ export class RestaurantsComponent implements OnInit {
 
     restaurants: Array<any>;
 
-    constructor(private restaurantsSrvc: RestaurantsService) {
-        // this.restaurants = restaurantsSrvc.getRestaurants();
-        restaurantsSrvc.getRestaurantsHttp().then(result => this.restaurants = result);
-    }
+    constructor(private restaurantsSrvc: RestaurantsService) {}
 
     ngOnInit() {
+        this.restaurantsSrvc.getRestaurantsHttp().then(result => this.restaurants = result);
     }
 
 
