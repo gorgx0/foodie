@@ -14,4 +14,9 @@ export class RestaurantsService {
     getRestaurantsHttp() {
         return this.http.get(this.restaurantsUrl).toPromise().then(response => response.json());
     }
+
+    getEvents() {
+        return this.http.get("/rest/events") ;
+    }
+
 }

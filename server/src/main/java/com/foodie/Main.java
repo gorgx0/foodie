@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 /**
  * Created by gorg on 02.03.17.
  */
-@SpringBootApplication(scanBasePackages = {"com.foodie.rest", "com.foodie.auth"})
+@SpringBootApplication
 public class Main {
 
     public static void main(String[] args) {
@@ -17,12 +17,12 @@ public class Main {
     }
 
 
-    @Bean
-    public FilterRegistrationBean filters() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
-        filterRegistrationBean.setFilter(authenticationFilter);
-        return filterRegistrationBean;
-    }
+//    @Bean
+//    public FilterRegistrationBean filters() {
+//        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+//        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+//        filterRegistrationBean.setFilter(authenticationFilter);
+//        return filterRegistrationBean;
+//    }
 
 }

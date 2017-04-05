@@ -14,7 +14,7 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.16.14</lombok.version>
-        <spring-boot-dependencies.version>1.5.2.RELEASE</spring-boot-dependencies.version>
+        <spring-boot-dependencies.version>1.5.1.RELEASE</spring-boot-dependencies.version>
     </properties>
 
 
@@ -41,6 +41,14 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-websocket</artifactId>
                 <version>${spring-boot-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>

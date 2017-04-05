@@ -18,5 +18,6 @@ public class Restaurant {
     private String name ;
     private Boolean active ;
     private BigDecimal deliveryFee ;
+    private Integer count = 0;
 
 }

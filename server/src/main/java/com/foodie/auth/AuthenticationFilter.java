@@ -24,13 +24,8 @@ public class AuthenticationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession(true);
-        if (session.isNew()) {
-            httpResponse.sendRedirect(((HttpServletRequest) request).getRequestURL().toString());
-            return;
-        }
-        Cookie[] cookies = httpRequest.getCookies();
+        log.debug("New session created: {}",session.getId());
         chain.doFilter(request, response);
     }
 

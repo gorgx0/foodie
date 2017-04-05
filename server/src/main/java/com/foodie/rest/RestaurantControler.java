@@ -19,12 +19,12 @@ public class RestaurantControler {
     @RequestMapping(method = RequestMethod.GET)
     Collection<Restaurant> getRestaurants() {
         return Arrays.asList(
-                new Restaurant(1L, "restaurant01", true, BigDecimal.ZERO),
-                new Restaurant(2L, "restaurant02", true, BigDecimal.ZERO),
-                new Restaurant(4L, "restaurant03", true, BigDecimal.ZERO),
-                new Restaurant(5L, "restaurant04", true, BigDecimal.ZERO),
-                new Restaurant(6L, "restaurant05", true, BigDecimal.ZERO),
-                new Restaurant(7L, "restaurant06", true, BigDecimal.TEN)
+                new Restaurant(1L, "restaurant01", true, BigDecimal.ZERO, 0),
+                new Restaurant(2L, "restaurant02", true, BigDecimal.ZERO, 0),
+                new Restaurant(4L, "restaurant03", true, BigDecimal.ZERO, 0),
+                new Restaurant(5L, "restaurant04", true, BigDecimal.ZERO, 0),
+                new Restaurant(6L, "restaurant05", true, BigDecimal.ZERO, 0),
+                new Restaurant(7L, "restaurant06", true, BigDecimal.TEN, 0 )
         );
     }
 

@@ -1,5 +1,9 @@
-import {async, ComponentFixture, TestBed} from "@angular/core/testing";
+import {async, ComponentFixture, TestBed, fakeAsync, inject} from "@angular/core/testing";
 import {RestaurantsComponent} from "./restaurants.component";
+import {RestaurantsService} from "../restaurants.service";
+import {MockBackend, MockConnection} from "@angular/http/testing";
+import {HttpModule, Http, BaseRequestOptions, XHRBackend, Response, ResponseOptions} from "@angular/http";
+
 
 describe('RestaurantsComponent', () => {
     let component: RestaurantsComponent;
@@ -7,7 +11,8 @@ describe('RestaurantsComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [RestaurantsComponent]
+            declarations: [RestaurantsComponent],
+            providers: [RestaurantsService,{provide: Http, useClass: MockBackend }]
         })
             .compileComponents();
     }));
@@ -18,7 +23,14 @@ describe('RestaurantsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+    // it('should create', () => {
+    //     expect(component).toBeTruthy();
+    // });
+
+    it('should use mock',inject([MockBackend],(mockHttp: MockBackend)=>{
+        mockHttp.connections.subscribe((connection: MockConnection) => {
+            connection.mockRespond(new Response(new ResponseOptions({body: ''})));
+        });
+        component.restaurants
+    }));
 });

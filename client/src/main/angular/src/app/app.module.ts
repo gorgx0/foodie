@@ -4,17 +4,24 @@ import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {RestaurantsComponent} from "./restaurants/restaurants.component";
 import {RestaurantsService} from "./restaurants.service";
+// let  pn = require("./pushNotifications");
+
+import "./pushNotifications.js"
+import {AlertModule} from "ng2-bootstrap";
+
 
 @NgModule({
-  declarations: [
-    RestaurantsComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule
-  ],
-  providers: [RestaurantsService],
-  bootstrap: [RestaurantsComponent]
+    declarations: [
+        RestaurantsComponent
+    ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpModule,
+        AlertModule.forRoot()
+    ],
+    providers: [RestaurantsService],
+    bootstrap: [RestaurantsComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
