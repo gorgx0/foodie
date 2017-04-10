@@ -14,23 +14,22 @@ import java.io.IOException;
  */
 
 @Slf4j
-
 public class AuthenticationFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        log.debug("AuthenticationFilter starting");
+        LOGGER.debug("AuthenticationFilter starting");
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpSession session = httpRequest.getSession(true);
-        log.debug("New session created: {}",session.getId());
+        LOGGER.debug("New session created: {}",session.getId());
         chain.doFilter(request, response);
     }
 
     @Override
     public void destroy() {
-        log.debug("AuthenticationFilter destroying");
+        LOGGER.debug("AuthenticationFilter destroying");
     }
 }

@@ -13,12 +13,12 @@ public class WebsocketHandler extends TextWebSocketHandler{
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        log.info("Websocket Message: {}",message);
+        LOGGER.info("Websocket Message: {}",message);
     }
 
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        log.info("websocket session: {}", session);
+        LOGGER.info("websocket session: {}", session);
     }
 }
