@@ -17,6 +17,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 /**
  * Created by gorg on 12.04.17.
  *
@@ -46,8 +49,24 @@ public class RestaurantControllerSecurityTest {
     }
 
     @Test
-    public void name() throws Exception {
+    public void template() throws Exception {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/restaurants")).andExpect(MockMvcResultMatchers.cookie().exists("USER_COOKIE"));
         LOGGER.info(resultActions.andReturn().getResponse().getContentAsString());
+    }
+
+
+    @Test
+    public void newUser() throws Exception {
+        assertThat("Not implemented yet.",true, is(false));
+    }
+
+    @Test
+    public void invitedUser() throws Exception {
+        assertThat("Not implemented yet.",true, is(false));
+    }
+
+    @Test
+    public void existingUser() throws Exception {
+        assertThat("Not implemented yet.",true, is(false));
     }
 }
