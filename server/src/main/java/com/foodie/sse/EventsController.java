@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,9 +19,9 @@ import static java.lang.Thread.sleep;
  */
 
 @RestController
-public class EventsControler {
+public class EventsController {
 
-    public static final List<SseEmitter> emmiters = Collections.synchronizedList(new ArrayList<>());
+    private static final List<SseEmitter> emitters = Collections.synchronizedList(new ArrayList<>());
 
     private final  static ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
 
@@ -31,23 +30,21 @@ public class EventsControler {
     public SseEmitter stream() throws InterruptedException, IOException {
         SseEmitter sseEmitter = new SseEmitter();
 
-        emmiters.add(sseEmitter);
+        emitters.add(sseEmitter);
 
-        sseEmitter.onCompletion(()->emmiters.remove(sseEmitter));
+        sseEmitter.onCompletion(()-> emitters.remove(sseEmitter));
 
-        Runnable callable = new Runnable() {
-            public void run() {
-                for (int i = 0; i < 5; i++) {
-                    try {
-                        sleep(2000l);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        sseEmitter.send("TestXXXX_"+i);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        Runnable callable = () -> {
+            for (int i = 0; i < 5; i++) {
+                try {
+                    sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    sseEmitter.send("TestXXXX_"+i);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         };
@@ -56,10 +53,11 @@ public class EventsControler {
         return sseEmitter;
     }
 
+    @SuppressWarnings("unused")
     public void sendEvents(String message) {
-            emmiters.forEach(emmiter -> {
+            emitters.forEach(emitter -> {
                 try {
-                    emmiter.send(message);
+                    emitter.send(message);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

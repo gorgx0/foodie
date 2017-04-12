@@ -7,17 +7,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import javax.servlet.*;
-import java.io.IOException;
-
 /**
  * Created by gorg on 11.04.17.
  */
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final UserSettingFilter filter;
+
     @Autowired
-    private UserSettingFilter filter;
+    public WebSecurityConfig(UserSettingFilter filter) {
+        this.filter = filter;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -27,6 +28,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.inMemoryAuthentication().withUser("user").password("passsword").roles("USER");
+        authenticationManagerBuilder.inMemoryAuthentication().withUser("user").password("password").roles("USER");
     }
 }

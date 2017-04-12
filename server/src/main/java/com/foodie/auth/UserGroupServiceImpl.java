@@ -1,8 +1,6 @@
 package com.foodie.auth;
 
 import com.foodie.model.User;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
 import java.util.HashMap;
@@ -13,7 +11,7 @@ import java.util.Map;
  */
 public class UserGroupServiceImpl implements UserGroupService {
 
-    private Map<Cookie, User> register = new HashMap<>();
+    private final Map<Cookie, User> register = new HashMap<>();
 
     @Override
 

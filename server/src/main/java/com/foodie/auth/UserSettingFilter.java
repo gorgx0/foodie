@@ -3,9 +3,7 @@ package com.foodie.auth;
 import com.foodie.model.Group;
 import com.foodie.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -13,22 +11,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Created by gorg on 11.04.17.
+ *
+ * This is main entry point to the app.
+ * Here user is recognized or created
+ *
  */
 @Component
 public class UserSettingFilter implements Filter {
 
-    public static final String USER_COOKIE_NAME = "USER_COOKIE";
-    public static final String GROUP_COOKIE_NAME = "GROUP_COOKIE";
+    private static final String USER_COOKIE_NAME = "USER_COOKIE";
+    private static final String GROUP_COOKIE_NAME = "GROUP_COOKIE";
+
+    private final UserGroupService userGroupService;
 
     @Autowired
-    UserGroupService userGroupService;
+    public UserSettingFilter(UserGroupService userGroupService) {
+        this.userGroupService = userGroupService;
+    }
+
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

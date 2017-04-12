@@ -11,11 +11,14 @@ import java.util.Collection;
 
 /**
  * Created by gorg on 02.03.17.
+ *
+ *
  */
 @RestController
 @RequestMapping("/restaurants")
-public class RestaurantControler {
+public class RestaurantController {
 
+    @SuppressWarnings("unused")
     @RequestMapping(method = RequestMethod.GET)
     Collection<Restaurant> getRestaurants() {
         return Arrays.asList(

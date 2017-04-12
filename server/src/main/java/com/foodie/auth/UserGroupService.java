@@ -1,8 +1,6 @@
 package com.foodie.auth;
 
 import com.foodie.model.User;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
 
