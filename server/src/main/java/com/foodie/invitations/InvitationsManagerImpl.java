@@ -18,6 +18,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class InvitationsManagerImpl implements InvitationsManager {
 
+    private Random random = new Random(System.nanoTime());
+
     private Cache<String, Group> cache = CacheBuilder.newBuilder()
             .expireAfterWrite(30, TimeUnit.MINUTES)
             .build();
@@ -32,8 +34,6 @@ public class InvitationsManagerImpl implements InvitationsManager {
 
     private InvitationsManagerImpl() {
     }
-
-    private Random random = new Random(System.nanoTime());
 
     private String generateUniqeId() {
         String id ;
@@ -53,10 +53,5 @@ public class InvitationsManagerImpl implements InvitationsManager {
     @Override
     public Group getGroupForInvitation(String invitationId) {
         return null;
-    }
-
-    public static void main(String[] args) {
-        InvitationsManagerImpl manager = new InvitationsManagerImpl();
-        System.out.println(manager.generateUniqeId());
     }
 }

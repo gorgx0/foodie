@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -28,6 +29,9 @@ public class Group {
 
     @Getter
     private Map<Restaurant, AtomicInteger> votes = new ConcurrentHashMap<>();
+
+    @Getter
+    private AtomicBoolean isNew = new AtomicBoolean(true);
 
     public Group(String groupId) {
         this.groupId = groupId;
