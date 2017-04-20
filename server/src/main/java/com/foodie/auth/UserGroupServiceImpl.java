@@ -11,17 +11,17 @@ import java.util.Map;
  */
 public class UserGroupServiceImpl implements UserGroupService {
 
-    private final Map<Cookie, User> register = new HashMap<>();
+    private final Map<String , User> register = new HashMap<>();
 
     @Override
 
-    public User getUser(Cookie cookie) {
-        return register.get(cookie);
+    public User getUser(String  sessionId) {
+        return register.get(sessionId);
     }
 
     @Override
-    public void setUser(Cookie cookie) {
-        register.put(cookie, new User());
+    public void setUser(String  sessionId) {
+        register.put(sessionId, new User());
     }
 
 

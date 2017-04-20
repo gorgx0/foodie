@@ -2,10 +2,8 @@ package com.foodie;
 
 import com.foodie.auth.UserGroupService;
 import com.foodie.auth.UserGroupServiceImpl;
-import com.foodie.auth.UserSettingFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -26,10 +24,4 @@ public class Main {
         return new UserGroupServiceImpl();
     }
 
-    @Bean
-    public FilterRegistrationBean registration(UserSettingFilter filter){
-        FilterRegistrationBean frb = new FilterRegistrationBean(filter);
-        frb.setEnabled(false);
-        return frb;
-    }
 }

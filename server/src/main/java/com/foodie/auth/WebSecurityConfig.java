@@ -13,21 +13,13 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserSettingFilter filter;
-
     @Autowired
-    public WebSecurityConfig(UserSettingFilter filter) {
-        this.filter = filter;
-    }
+    FoodieSecurityContextRepository contextRepository ;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterAfter(filter, BasicAuthenticationFilter.class);
+        http.securityContext().securityContextRepository(contextRepository);
     }
 
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.inMemoryAuthentication().withUser("user").password("password").roles("USER");
-    }
 }

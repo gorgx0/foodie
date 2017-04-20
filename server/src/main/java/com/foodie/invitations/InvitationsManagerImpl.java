@@ -5,7 +5,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.google.common.io.BaseEncoding;
-import org.springframework.security.crypto.codec.Hex;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.util.UriUtils;

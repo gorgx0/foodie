@@ -9,7 +9,7 @@ import javax.servlet.http.Cookie;
  */
 public interface UserGroupService {
 
-    User getUser(Cookie cookie) ;
+    User getUser(String sessionId) ;
 
-    void setUser(Cookie cookie);
+    void setUser(String sessionId);
 }
