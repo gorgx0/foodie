@@ -1,27 +1,45 @@
 package com.foodie.auth;
 
+import com.foodie.model.Group;
 import com.foodie.model.User;
+import com.foodie.util.RandomStringProvider;
+import com.foodie.util.UniqueKeyGenerator;
+import com.foodie.util.UniqueKeyGeneratorImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by gorg on 11.04.17.
  */
+@Component
 public class UserGroupServiceImpl implements UserGroupService {
 
-    private final Map<String , User> register = new HashMap<>();
+    private Map<String, Group> groupsMap = new HashMap<>();
+
+
+    @Autowired
+    UniqueKeyGenerator groupIdGenerator ;
+
 
     @Override
+    public User getUser(String sessionId, String invitationId) {
 
-    public User getUser(String  sessionId) {
-        return register.get(sessionId);
-    }
+        User u = null;
 
-    @Override
-    public void setUser(String  sessionId) {
-        register.put(sessionId, new User());
+        if(sessionId==null && invitationId==null){
+            u = new User();
+            Group newGroup = new Group(groupIdGenerator.getUniqueKey());
+            groupsMap.put(newGroup.getGroupId(), newGroup);
+            u.setLastGroup(newGroup);
+        }
+        return u;
     }
 
 

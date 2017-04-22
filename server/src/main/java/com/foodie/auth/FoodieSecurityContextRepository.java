@@ -1,5 +1,6 @@
 package com.foodie.auth;
 
+import com.foodie.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -23,12 +24,15 @@ public class FoodieSecurityContextRepository implements SecurityContextRepositor
 
     @Override
     public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
-        HttpSession session = requestResponseHolder.getRequest().getSession(false);
+        HttpServletRequest request = requestResponseHolder.getRequest();
+        HttpSession session = request.getSession(false);
         if (session == null){
-            session = requestResponseHolder.getRequest().getSession(true);
+            session = request.getSession(true);
         }
         String sessionId = session.getId();
-        userGroupService.getUser(S)
+        String inviteId = request.getParameter("INVITE");
+
+        User user = userGroupService.getUser(sessionId, inviteId);
         Object sessionAttribute = session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
 
         return new SecurityContextImpl();

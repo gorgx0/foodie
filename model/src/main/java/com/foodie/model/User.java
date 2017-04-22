@@ -8,7 +8,6 @@ import lombok.Data;
 @Data
 public class User {
 
-    private Boolean registered ;
     private Group lastGroup ;
 
 }
