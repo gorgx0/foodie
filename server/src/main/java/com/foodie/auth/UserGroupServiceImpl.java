@@ -21,7 +21,11 @@ import java.util.Set;
 @Component
 public class UserGroupServiceImpl implements UserGroupService {
 
-    private Map<String, Group> groupsMap = new HashMap<>();
+    @Autowired
+    Map<String, Group> groupsMap;
+
+    @Autowired
+    Map<String, User> usersMap;
 
 
     @Autowired
@@ -38,6 +42,18 @@ public class UserGroupServiceImpl implements UserGroupService {
             Group newGroup = new Group(groupIdGenerator.getUniqueKey());
             groupsMap.put(newGroup.getGroupId(), newGroup);
             u.setLastGroup(newGroup);
+        }else if(sessionId==null && invitationId!=null){
+            u = new User();
+            Group group = groupsMap.get(invitationId);
+            u.setLastGroup(group);
+        }else if(sessionId!=null && invitationId==null){
+            u = usersMap.get(sessionId);
+        }else if(sessionId!=null && invitationId!=null){
+            u = usersMap.get(sessionId);
+            Group inviteGroup = groupsMap.get(invitationId);
+            if(!u.getLastGroup().equals(inviteGroup)){
+                u.setLastGroup(inviteGroup);
+            }
         }
         return u;
     }

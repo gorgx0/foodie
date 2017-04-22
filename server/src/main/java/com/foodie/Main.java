@@ -3,6 +3,7 @@ package com.foodie;
 import com.foodie.auth.UserGroupService;
 import com.foodie.auth.UserGroupServiceImpl;
 import com.foodie.model.Group;
+import com.foodie.model.User;
 import com.foodie.util.UniqueKeyGenerator;
 import com.foodie.util.UniqueKeyGeneratorImpl;
 import org.springframework.boot.SpringApplication;
@@ -24,14 +25,20 @@ public class Main {
 
     private Map<String, Group> groupsMap = new HashMap<>();
 
+    private Map<String, User> usersMap = new HashMap<>();
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }
 
     @Bean(name = "groups")
-    public Map<String, Group> getGroups() {
+    public Map<String, Group> groups() {
         return groupsMap ;
+    }
+
+    @Bean(name = "users")
+    public Map<String, User> users() {
+        return usersMap;
     }
 
     @Bean
