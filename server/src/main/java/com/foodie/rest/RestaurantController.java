@@ -26,12 +26,12 @@ public class RestaurantController {
     @RequestMapping(method = RequestMethod.GET)
     Collection<Restaurant> getRestaurants() {
         List<Restaurant> restaurants = Arrays.asList(
-                new Restaurant(1L, "restaurant01", true, BigDecimal.ZERO, 0),
-                new Restaurant(2L, "restaurant02", true, BigDecimal.ZERO, 0),
-                new Restaurant(4L, "restaurant03", true, BigDecimal.ZERO, 0),
-                new Restaurant(5L, "restaurant04", true, BigDecimal.ZERO, 0),
-                new Restaurant(6L, "restaurant05", true, BigDecimal.ZERO, 0),
-                new Restaurant(7L, "restaurant06", true, BigDecimal.TEN, 0)
+                new Restaurant(2L, "restaurant02", 0),
+                new Restaurant(1L, "restaurant01", 0),
+                new Restaurant(4L, "restaurant03", 0),
+                new Restaurant(5L, "restaurant04", 0),
+                new Restaurant(6L, "restaurant05", 0),
+                new Restaurant(7L, "restaurant06", 0)
         );
         return restaurants;
 

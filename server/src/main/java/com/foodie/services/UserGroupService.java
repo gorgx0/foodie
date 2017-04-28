@@ -1,4 +1,4 @@
-package com.foodie.auth;
+package com.foodie.services;
 
 import com.foodie.model.User;
 

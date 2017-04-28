@@ -16,8 +16,6 @@ public class Restaurant {
 
     private Long id;
     private String name ;
-    private Boolean active ;
-    private BigDecimal deliveryFee ;
-    private Integer count = 0;
+    private Integer votesCount = 0;
 
 }
