@@ -35,6 +35,7 @@ public class UserGroupServiceImpl implements UserGroupService {
             Group newGroup = new Group(groupIdGenerator.getUniqueKey());
             groupsMap.put(newGroup.getGroupId(), newGroup);
             u.setLastGroup(newGroup);
+            usersMap.put(sessionId, u);
         }else if(sessionId==null && invitationId!=null){
             u = new User();
             Group group = groupsMap.get(invitationId);

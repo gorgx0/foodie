@@ -45,11 +45,10 @@ public class Main {
         return new UniqueKeyGeneratorImpl(groupsMap);
     }
 
-    @Bean
-    public FilterRegistrationBean filterRegistrationBean() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setFilter(new UserSessionFilter());
-        return filterRegistrationBean;
-
-    }
+//    @Bean
+//    public FilterRegistrationBean filterRegistrationBean() {
+//        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+//        filterRegistrationBean.setFilter(new UserSessionFilter());
+//        return filterRegistrationBean;
+//    }
 }
