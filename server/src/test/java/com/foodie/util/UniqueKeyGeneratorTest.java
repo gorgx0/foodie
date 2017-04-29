@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
  * Created by gorg on 22.04.17.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@ContextConfiguration(classes = Main.class)
 public class UniqueKeyGeneratorTest {
 
 

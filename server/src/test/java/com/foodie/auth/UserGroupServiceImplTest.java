@@ -1,5 +1,6 @@
 package com.foodie.auth;
 
+import com.foodie.Main;
 import com.foodie.model.Group;
 import com.foodie.model.User;
 import com.foodie.services.UserGroupService;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Map;
@@ -26,7 +28,7 @@ import static org.springframework.util.Assert.notNull;
  */
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@ContextConfiguration(classes = Main.class)
 public class UserGroupServiceImplTest {
 
 
