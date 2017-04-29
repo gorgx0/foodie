@@ -14,6 +14,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by gorg on 23.04.17.
@@ -31,6 +32,6 @@ public class UserSessionFilterTest {
     @Test
     public void name() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(context).build();
-        mvc.perform(get("/restaurants")).andExpect(ResultMatcher.class)
+        mvc.perform(get("/restaurants")).andExpect(status().isOk());
     }
 }
