@@ -22,7 +22,6 @@ import java.util.List;
 @RequestMapping("/restaurants")
 public class RestaurantController {
 
-    @SuppressWarnings("unused")
     @RequestMapping(method = RequestMethod.GET)
     Collection<Restaurant> getRestaurants() {
         List<Restaurant> restaurants = Arrays.asList(
