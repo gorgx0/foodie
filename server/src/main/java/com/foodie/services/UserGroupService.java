@@ -12,4 +12,7 @@ public interface UserGroupService {
 
     User getUser(String sessionId, String invitationId) ;
 
+    User createNewUser(String id);
+
+    User getUser(String userCookieValue);
 }

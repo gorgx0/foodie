@@ -31,11 +31,7 @@ public class UserGroupServiceImpl implements UserGroupService {
         User u = null;
 
         if(sessionId==null && invitationId==null){
-            u = new User();
-            Group newGroup = new Group(groupIdGenerator.getUniqueKey());
-            groupsMap.put(newGroup.getGroupId(), newGroup);
-            u.setLastGroup(newGroup);
-            usersMap.put(sessionId, u);
+            throw new IllegalArgumentException("sessionId=null && invitationId==null not allowed here");
         }else if(sessionId==null && invitationId!=null){
             u = new User();
             Group group = groupsMap.get(invitationId);
@@ -53,4 +49,24 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
 
+    @Override
+    public User createNewUser(String id) {
+        User u = new User();
+        Group newGroup = new Group(groupIdGenerator.getUniqueKey());
+        groupsMap.put(newGroup.getGroupId(), newGroup);
+        u.setLastGroup(newGroup);
+        usersMap.put(id, u);
+        return u;
+    }
+
+    @Override
+    public User getUser(String userCookieValue) {
+        User userFromCookie = usersMap.get(userCookieValue);
+        if(null == userFromCookie.getLastGroup()){
+            Group g = new Group(groupIdGenerator.getUniqueKey());
+            userFromCookie.setLastGroup(g);
+        }
+        return userFromCookie;
+
+    }
 }

@@ -7,8 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.web.util.WebUtils;
 
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -21,6 +23,8 @@ import java.io.IOException;
 public class UserSessionFilter implements Filter {
 
     public static final String FOODIE_USER = "FOODIE_USER";
+    public static final String FOODIE_USER_COOKIE_NAME = "FOODIE_USER";
+
 
     @Autowired
     private UserGroupServiceImpl userGroupService;
@@ -34,14 +38,21 @@ public class UserSessionFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        Cookie userCookie = WebUtils.getCookie(httpServletRequest, FOODIE_USER_COOKIE_NAME);
         HttpSession session = httpServletRequest.getSession(true);
-        if(session.isNew()){
+        if(null==userCookie){
             LOGGER.debug("Creating new session");
-            User user = userGroupService.getUser(null, null);
+            User user = userGroupService.createNewUser(session.getId());
             session.setAttribute(FOODIE_USER,user);
         }else {
-            User foodieUser = (User) session.getAttribute(FOODIE_USER);
-            LOGGER.debug("Returning user: {}",foodieUser);
+            String userCookieValue = userCookie.getValue();
+            if (userCookieValue != null) {
+                User user = userGroupService.getUser(userCookieValue);
+                session.setAttribute(FOODIE_USER,user);
+                LOGGER.debug("Returning user: {}",user);
+            }else {
+                LOGGER.warn("User cookie has no value");
+            }
         }
         chain.doFilter(request,response);
     }

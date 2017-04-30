@@ -17,7 +17,7 @@ public class RandomStringProvider {
     private Random random = new Random();
 
     @Autowired
-    public RandomStringProvider(@Value("foodie.idAlphabet") String alphabet) {
+    public RandomStringProvider(@Value("${foodie.idAlphabet}") String alphabet) {
         this.alphabet = alphabet.toCharArray();
     }
 
