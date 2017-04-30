@@ -53,11 +53,13 @@ public class UserGroupServiceImpl implements UserGroupService {
     public User createNewUser(String id) {
         User u = new User();
         Group newGroup = new Group(groupIdGenerator.getUniqueKey());
-        groupsMap.put(newGroup.getGroupId(), newGroup);
+        groupsMap.put(newGroup.getId(), newGroup);
         u.setLastGroup(newGroup);
         usersMap.put(id, u);
         return u;
     }
+
+
 
     @Override
     public User getUser(String userCookieValue) {
@@ -67,6 +69,5 @@ public class UserGroupServiceImpl implements UserGroupService {
             userFromCookie.setLastGroup(g);
         }
         return userFromCookie;
-
     }
 }

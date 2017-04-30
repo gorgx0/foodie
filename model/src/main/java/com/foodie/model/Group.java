@@ -1,9 +1,7 @@
 package com.foodie.model;
 
-import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -11,15 +9,15 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by gorg on 11.04.17.
  */
+@ToString
 public class Group {
 
     @Getter
-    private final String groupId;
+    private final String id;
 
     @Getter
     private final Set<User> users = new HashSet<>();
@@ -33,8 +31,8 @@ public class Group {
     @Getter
     private AtomicBoolean isNew = new AtomicBoolean(true);
 
-    public Group(String groupId) {
-        this.groupId = groupId;
+    public Group(String id) {
+        this.id = id;
     }
 
 }

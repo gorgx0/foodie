@@ -24,6 +24,7 @@ public class UserSessionFilter implements Filter {
 
     public static final String FOODIE_USER = "FOODIE_USER";
     public static final String FOODIE_USER_COOKIE_NAME = "FOODIE_USER";
+    public static final String INVITE_ID_PARAM_NAME = "inviteId";
 
 
     @Autowired
@@ -50,6 +51,11 @@ public class UserSessionFilter implements Filter {
                 User user = userGroupService.getUser(userCookieValue);
                 session.setAttribute(FOODIE_USER,user);
                 LOGGER.debug("Returning user: {}",user);
+                String inviteId = httpServletRequest.getParameter(INVITE_ID_PARAM_NAME);
+                if (inviteId != null) {
+                    // TODO:  invite processing
+                }
+
             }else {
                 LOGGER.warn("User cookie has no value");
             }

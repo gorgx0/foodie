@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -52,8 +51,8 @@ public class UserGroupServiceImplTest {
         User user = userGroupService.getUser(null, null);
         assertThat(user,notNullValue());
         assertThat(user.getLastGroup(),notNullValue());
-        assertThat(user.getLastGroup().getGroupId(),notNullValue());
-        assertTrue(user.getLastGroup().getGroupId().length()>0);
+        assertThat(user.getLastGroup().getId(),notNullValue());
+        assertTrue(user.getLastGroup().getId().length()>0);
         assertThat(user.getLastGroup().getRestaurants(),notNullValue());
         assertTrue(user.getLastGroup().getRestaurants().size()==0);
     }
@@ -90,8 +89,8 @@ public class UserGroupServiceImplTest {
         Group oldGroup = mock(Group.class);
         Group newGroup = mock(Group.class);
         String newGroupId = inviteId;
-        when(oldGroup.getGroupId()).thenReturn(oldGroupId);
-        when(newGroup.getGroupId()).thenReturn(newGroupId);
+        when(oldGroup.getId()).thenReturn(oldGroupId);
+        when(newGroup.getId()).thenReturn(newGroupId);
         when(u.getLastGroup()).thenReturn(oldGroup);
         when(u.getLastGroup()).thenReturn(mock(Group.class));
         groupMap.put(oldGroupId, oldGroup);
