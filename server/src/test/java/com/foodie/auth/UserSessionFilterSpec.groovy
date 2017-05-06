@@ -2,8 +2,11 @@ package com.foodie.auth
 
 import com.foodie.model.Group
 import com.foodie.model.User
+import com.foodie.services.UserGroupServiceImpl
 import com.foodie.util.UniqueKeyGeneratorImpl
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.mock.web.MockHttpSession
@@ -28,8 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by gorg on 29.04.17.
  */
 
-@SpringBootTest(webEnvironment = MOCK)
+@SpringBootTest
 @AutoConfigureMockMvc
+@Slf4j("LOGGER")
 class UserSessionFilterSpec extends Specification {
 
     public static final String RETURNING_USER_ID = "ReturningUserId"
@@ -43,10 +47,16 @@ class UserSessionFilterSpec extends Specification {
     MockMvc mvc
 
     @Autowired
+    @Qualifier("groups")
     Map<String, Group> groups
 
     @Autowired
+    @Qualifier("users")
     Map<String, User> users
+
+    @Autowired
+    @Qualifier("invites")
+    Map<String, Group> invites
 
     def "new User with no session and no rememberMe cookie"() {
         given:
@@ -76,13 +86,11 @@ class UserSessionFilterSpec extends Specification {
 
     def "returning user with no group"() {
         given:
-            User u = new User()
-            def returningUserId = RETURNING_USER_ID
-            u.setId(returningUserId)
+            User u = new User(RETURNING_USER_ID)
             MockHttpSession session = new MockHttpSession(webApplicationContext.servletContext)
             session.setAttribute(FOODIE_USER, null)
             users.put(u.id, u)
-            Cookie c = new Cookie(FOODIE_USER_COOKIE_NAME, returningUserId)
+            Cookie c = new Cookie(FOODIE_USER_COOKIE_NAME, RETURNING_USER_ID)
         when:
             mvc.perform(get("/restaurants").cookie(c).session(session)).andExpect(status().isOk())
         then:
@@ -93,14 +101,14 @@ class UserSessionFilterSpec extends Specification {
 
     def "existing user with invitation to join new group"() {
         given:
-            User user = new User()
-            user.id = REGISTERED_USER_ID
+            User user = new User(REGISTERED_USER_ID)
             Group oldGroup = new Group("oldGroup")
             Group newGroup = new Group("newGroup")
             oldGroup.isNew = new AtomicBoolean(false)
             newGroup.isNew = new AtomicBoolean(false)
             groups.put(oldGroup.id,oldGroup)
             groups.put(newGroup.id,newGroup)
+            invites.put(INVITATION_ID,newGroup)
             user.lastGroup = oldGroup
             users.put(user.id,user)
             Cookie c = new Cookie(FOODIE_USER_COOKIE_NAME,user.id)
@@ -112,5 +120,23 @@ class UserSessionFilterSpec extends Specification {
             userFromSession == user
             userFromSession.lastGroup == newGroup
     }
+
+    def "existing user generates invite url for its group"() {
+        given:
+            User u = new User(REGISTERED_USER_ID)
+            Group g = new Group("currentUserGroupId")
+            u.lastGroup = g
+            users.put(u.id,u)
+            groups.put(g.id,g)
+            MockHttpSession session = new MockHttpSession(webApplicationContext.servletContext)
+            session.setAttribute(FOODIE_USER,u)
+        when:
+            def result = mvc.perform(get("/invite").session(session)).andExpect(status().isOk()).andReturn()
+        then:
+            def id = result.response.getContentAsString()
+            id != null
+            invites.get(id) == g
+    }
+
 
 }

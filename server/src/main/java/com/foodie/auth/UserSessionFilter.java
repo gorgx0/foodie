@@ -12,6 +12,7 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
@@ -30,7 +31,6 @@ public class UserSessionFilter implements Filter {
     @Autowired
     private UserGroupServiceImpl userGroupService;
 
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         LOGGER.debug("Starting UserSessionFilter");
@@ -39,26 +39,31 @@ public class UserSessionFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         Cookie userCookie = WebUtils.getCookie(httpServletRequest, FOODIE_USER_COOKIE_NAME);
         HttpSession session = httpServletRequest.getSession(true);
-        if(null==userCookie){
+        User user = (User) session.getAttribute(FOODIE_USER);
+        if(null==userCookie && null==user){
             LOGGER.debug("Creating new session");
-            User user = userGroupService.createNewUser(session.getId());
+            user = userGroupService.createNewUser();
             session.setAttribute(FOODIE_USER,user);
+            Cookie cookie = new Cookie(FOODIE_USER_COOKIE_NAME, user.getId());
+            cookie.setMaxAge(Integer.MAX_VALUE);
+            httpServletResponse.addCookie(cookie);
         }else {
-            String userCookieValue = userCookie.getValue();
-            if (userCookieValue != null) {
-                User user = userGroupService.getUser(userCookieValue);
-                session.setAttribute(FOODIE_USER,user);
-                LOGGER.debug("Returning user: {}",user);
-                String inviteId = httpServletRequest.getParameter(INVITE_ID_PARAM_NAME);
-                if (inviteId != null) {
-                    // TODO:  invite processing
+            if(user==null){
+                if (userCookie != null) {
+                    user = userGroupService.getUser(userCookie.getValue());
+                    LOGGER.debug("Returning user: {}", user);
+                }else {
+                    user = userGroupService.createNewUser();
                 }
-
-            }else {
-                LOGGER.warn("User cookie has no value");
             }
+            session.setAttribute(FOODIE_USER, user);
+        }
+        String inviteId = httpServletRequest.getParameter(INVITE_ID_PARAM_NAME);
+        if (inviteId != null) {
+            userGroupService.applyInvite(userCookie.getValue(),inviteId);
         }
         chain.doFilter(request,response);
     }

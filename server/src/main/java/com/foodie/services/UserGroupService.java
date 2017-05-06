@@ -1,5 +1,6 @@
 package com.foodie.services;
 
+import com.foodie.model.Group;
 import com.foodie.model.User;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +11,13 @@ import javax.servlet.http.Cookie;
  */
 public interface UserGroupService {
 
-    User getUser(String sessionId, String invitationId) ;
-
-    User createNewUser(String id);
+    User createNewUser();
 
     User getUser(String userCookieValue);
+
+    void applyInvite(String userCookieValue, String invitationId);
+
+    User createNewUserWithInvite(String inivationId);
+
+    String createInviteId(Group group);
 }

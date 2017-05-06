@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,18 +32,16 @@ import static org.mockito.Mockito.when;
  * Created by gorg on 22.04.17.
  */
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = Main.class)
+@ContextConfiguration(classes = {UniqueKeyGeneratorTest.TestConfig.class})
 public class UniqueKeyGeneratorTest {
 
-
-    @Autowired
-    Map<String, Group> groups = new HashMap<>();
+    private static Map<String, Group> groups = new HashMap<>();
 
     @MockBean
     RandomStringProvider randomStringProvider;
 
     @Autowired
-    UniqueKeyGeneratorImpl uniqueKeyGeneratorImpl ;
+    UniqueKeyGeneratorImpl uniqueKeyGeneratorImpl;
 
     @Before
     public void setUp() throws Exception {
@@ -73,11 +72,11 @@ public class UniqueKeyGeneratorTest {
     }
 
     @TestConfiguration
-    class TestConfig {
+    static class TestConfig {
 
         @Bean
         UniqueKeyGeneratorImpl uniqueKeyGenerator() {
-            return new UniqueKeyGeneratorImpl(groups);
+            return new UniqueKeyGeneratorImpl(groups.keySet());
         }
 
 

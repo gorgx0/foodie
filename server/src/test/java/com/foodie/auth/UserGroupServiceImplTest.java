@@ -1,6 +1,5 @@
 package com.foodie.auth;
 
-import com.foodie.Main;
 import com.foodie.model.Group;
 import com.foodie.model.User;
 import com.foodie.services.UserGroupService;
@@ -8,8 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Map;
@@ -35,11 +34,17 @@ public class UserGroupServiceImplTest {
     @Autowired
     private UserGroupService userGroupService;
 
+    @Qualifier("groups")
     @Autowired
     Map<String, Group> groupMap;
 
+    @Qualifier("users")
     @Autowired
     Map<String, User> usersMap;
+
+    @Autowired
+    private Map invites;
+
 
     @Before
     public void setUp() throws Exception {
@@ -49,7 +54,7 @@ public class UserGroupServiceImplTest {
 
     @Test
     public void newUserWithoutInvite() throws Exception {
-        User user = userGroupService.createNewUser("newUserId");
+        User user = userGroupService.createNewUser();
         assertThat(user,notNullValue());
         assertThat(user.getLastGroup(),notNullValue());
         assertThat(user.getLastGroup().getId(),notNullValue());
@@ -63,8 +68,8 @@ public class UserGroupServiceImplTest {
 
         String invitationId = "invitationId";
         Group g = mock(Group.class);
-        groupMap.put(invitationId, g);
-        User u = userGroupService.getUser(null, invitationId);
+        invites.put(invitationId, g);
+        User u = userGroupService.createNewUserWithInvite(invitationId);
         assertThat(u,notNullValue());
         assertThat(u.getLastGroup(),notNullValue());
         assertThat(u.getLastGroup().getRestaurants(),notNullValue());
@@ -76,7 +81,7 @@ public class UserGroupServiceImplTest {
         when(u.getLastGroup()).thenReturn(mock(Group.class));
         String userSessionId = "oldUserSessionId";
         usersMap.put(userSessionId, u);
-        User user = userGroupService.getUser(userSessionId, null);
+        User user = userGroupService.getUser(userSessionId);
         assertThat(user,notNullValue());
         assertThat(user.getLastGroup(),notNullValue());
     }
@@ -86,22 +91,22 @@ public class UserGroupServiceImplTest {
         String userSessionId = "oldUserSessionId";
         String inviteId = "inviteId";
         String oldGroupId = "oldGroupId";
+        String newGroupId = "newGroupId";
         User u = mock(User.class);
         Group oldGroup = mock(Group.class);
         Group newGroup = mock(Group.class);
-        String newGroupId = inviteId;
         when(oldGroup.getId()).thenReturn(oldGroupId);
         when(newGroup.getId()).thenReturn(newGroupId);
         when(u.getLastGroup()).thenReturn(oldGroup);
         when(u.getLastGroup()).thenReturn(mock(Group.class));
         groupMap.put(oldGroupId, oldGroup);
         groupMap.put(newGroupId, newGroup);
+        invites.put(inviteId, newGroup);
         usersMap.put(userSessionId, u);
 
-        User user = userGroupService.getUser(userSessionId, inviteId);
+        userGroupService.applyInvite(userSessionId, inviteId);
 
-        assertThat(user,notNullValue());
-        verify(u, times(1)).getLastGroup();
         verify(u, times(1)).setLastGroup(newGroup);
     }
+
 }

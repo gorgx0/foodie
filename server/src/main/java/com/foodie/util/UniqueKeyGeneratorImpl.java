@@ -13,7 +13,6 @@ import java.util.Set;
  * Created by gorg on 22.04.17.
  */
 @Slf4j
-@Component
 public class UniqueKeyGeneratorImpl implements UniqueKeyGenerator {
 
     public final static int KEY_LENGTH = 64 ;
@@ -33,8 +32,8 @@ public class UniqueKeyGeneratorImpl implements UniqueKeyGenerator {
         return res;
     }
 
-    public UniqueKeyGeneratorImpl(@Autowired Map<String,Group> groupMap){
-        this.keys = groupMap.keySet();
+    public UniqueKeyGeneratorImpl(Set<String> inSet){
+        this.keys = inSet;
     }
 
 }
