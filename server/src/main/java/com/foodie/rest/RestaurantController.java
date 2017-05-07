@@ -1,38 +1,39 @@
 package com.foodie.rest;
 
+import com.foodie.auth.UserSessionFilter;
 import com.foodie.model.Restaurant;
+import com.foodie.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import static com.foodie.auth.UserSessionFilter.FOODIE_USER;
 
 /**
  * Created by gorg on 02.03.17.
  *
  *
  */
+@Slf4j
 @RestController
 @RequestMapping("/restaurants")
 public class RestaurantController {
 
     @RequestMapping(method = RequestMethod.GET)
-    Collection<Restaurant> getRestaurants() {
-        List<Restaurant> restaurants = Arrays.asList(
-                new Restaurant(2L, "restaurant02", 0),
-                new Restaurant(1L, "restaurant01", 0),
-                new Restaurant(4L, "restaurant03", 0),
-                new Restaurant(5L, "restaurant04", 0),
-                new Restaurant(6L, "restaurant05", 0),
-                new Restaurant(7L, "restaurant06", 0)
-        );
-        return restaurants;
+    public Collection<Restaurant> getRestaurants(@Autowired HttpSession session) {
+        return ((User) session.getAttribute(FOODIE_USER)).getLastGroup().getRestaurants();
+    }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public void addRestaurant(@RequestBody Restaurant restaurant, @SessionAttribute(FOODIE_USER) User user){
+        LOGGER.debug("User {} adds new restaurants {}", user,restaurant);
+        user.getLastGroup().getRestaurants().add(restaurant);
     }
 }

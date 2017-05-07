@@ -29,9 +29,12 @@ public class UserSessionFilterTest {
 
     private MockMvc mvc;
 
+    @Autowired
+    UserSessionFilter userSessionFilter;
+
     @Test
     public void name() throws Exception {
-        mvc = MockMvcBuilders.webAppContextSetup(context).build();
+        mvc = MockMvcBuilders.webAppContextSetup(context).addFilter(userSessionFilter,"/*").build();
         mvc.perform(get("/restaurants")).andExpect(status().isOk());
     }
 }

@@ -38,11 +38,14 @@ public class UserSessionFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+
         Cookie userCookie = WebUtils.getCookie(httpServletRequest, FOODIE_USER_COOKIE_NAME);
         HttpSession session = httpServletRequest.getSession(true);
         User user = (User) session.getAttribute(FOODIE_USER);
+
         if(null==userCookie && null==user){
             LOGGER.debug("Creating new session");
             user = userGroupService.createNewUser();
