@@ -53,6 +53,10 @@ public class UserGroupServiceImpl implements UserGroupService {
     @Override
     public User getUser(String userCookieValue) {
         User userFromCookie = users.get(userCookieValue);
+        if (userFromCookie == null) {
+            LOGGER.warn("Not existing user for cookieId: {}",userCookieValue);
+            throw new UserNotFoundException(userCookieValue);
+        }
         if(null == userFromCookie.getLastGroup()){
             LOGGER.info("User with no group");
             Group g = new Group(groupIdGenerator.getUniqueKey());

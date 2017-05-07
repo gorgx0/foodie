@@ -55,8 +55,6 @@ public class UserSessionFilter implements Filter {
                 if (userCookie != null) {
                     user = userGroupService.getUser(userCookie.getValue());
                     LOGGER.debug("Returning user: {}", user);
-                }else {
-                    user = userGroupService.createNewUser();
                 }
             }
             session.setAttribute(FOODIE_USER, user);

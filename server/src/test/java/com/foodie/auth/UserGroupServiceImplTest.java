@@ -3,6 +3,9 @@ package com.foodie.auth;
 import com.foodie.model.Group;
 import com.foodie.model.User;
 import com.foodie.services.UserGroupService;
+import com.foodie.util.InvitationNotFoundException;
+import com.foodie.util.UserNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +29,7 @@ import static org.springframework.util.Assert.notNull;
  * Created by gorg on 21.04.17.
  */
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class UserGroupServiceImplTest {
@@ -109,4 +113,44 @@ public class UserGroupServiceImplTest {
         verify(u, times(1)).setLastGroup(newGroup);
     }
 
+
+    @Test(expected = UserNotFoundException.class)
+    public void testForNonExistingUSer() throws Exception {
+        String notExistingUserId = "notExistingUserId";
+        if(usersMap.remove(notExistingUserId)!=null){
+            LOGGER.warn("User exsited");
+        }
+        userGroupService.getUser(notExistingUserId);
+    }
+
+
+    @Test(expected = InvitationNotFoundException.class)
+    public void testapplyInfiveForNonExistingInvite() throws Exception {
+        User user = userGroupService.createNewUser();
+        String notExistingInviteId = "notExistingInviteId";
+        if(invites.remove(notExistingInviteId)!=null){
+            LOGGER.warn("InviteExisted");
+        }
+        userGroupService.applyInvite(user.getId(),notExistingInviteId);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void testApplyInviteForNonExistingUser() throws Exception {
+        String notExistingUserId = "notExistingUserId";
+        if(usersMap.remove(notExistingUserId)!=null){
+            LOGGER.warn("User exsited");
+        }
+        userGroupService.applyInvite(notExistingUserId,"someOtherInviteId");
+    }
+
+    @Test(expected = InvitationNotFoundException.class)
+    public void testCresteNewUserForNonExistingInvite() throws Exception {
+        User u = userGroupService.createNewUser();
+        String inviteId = userGroupService.createInviteId(u.getLastGroup());
+        String notExistingInviteId = "notExistingInviteId";
+        if(invites.remove(notExistingInviteId)!=null){
+            LOGGER.warn("InviteExisted");
+        }
+        User userCreated = userGroupService.createNewUserWithInvite(notExistingInviteId);
+    }
 }
