@@ -44,6 +44,7 @@ public class UserGroupServiceImpl implements UserGroupService {
         Group newGroup = new Group(groupIdGenerator.getUniqueKey());
         groups.put(newGroup.getId(), newGroup);
         u.setLastGroup(newGroup);
+        newGroup.getUsers().add(u);
         users.put(u.getId(), u);
         return u;
     }
@@ -61,6 +62,7 @@ public class UserGroupServiceImpl implements UserGroupService {
             LOGGER.info("User with no group");
             Group g = new Group(groupIdGenerator.getUniqueKey());
             userFromCookie.setLastGroup(g);
+            g.getUsers().add(userFromCookie);
         }
         return userFromCookie;
     }
@@ -77,6 +79,8 @@ public class UserGroupServiceImpl implements UserGroupService {
             LOGGER.warn("Invitation not found for id={}", invitationId);
             throw new InvitationNotFoundException(invitationId);
         }
+        u.getLastGroup().getUsers().remove(u);
+        g.getUsers().add(u);
         u.setLastGroup(g);
     }
 
@@ -87,6 +91,7 @@ public class UserGroupServiceImpl implements UserGroupService {
         if (g != null) {
             u = new User(userIdGenerator.getUniqueKey());
             u.setLastGroup(g);
+            g.getUsers().add(u);
         }else {
             LOGGER.warn("Invitation not found for id={}",inivationId);
             throw new InvitationNotFoundException(inivationId);

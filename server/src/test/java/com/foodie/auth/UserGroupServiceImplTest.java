@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -65,29 +67,32 @@ public class UserGroupServiceImplTest {
         assertTrue(user.getLastGroup().getId().length()>0);
         assertThat(user.getLastGroup().getRestaurants(),notNullValue());
         assertTrue(user.getLastGroup().getRestaurants().size()==0);
+        assertThat(user.getLastGroup().getUsers(),hasItem(user));
     }
 
     @Test
     public void newUserWithInvite() throws Exception {
 
         String invitationId = "invitationId";
-        Group g = mock(Group.class);
+        Group g = new Group("invitationGroup");
         invites.put(invitationId, g);
         User u = userGroupService.createNewUserWithInvite(invitationId);
         assertThat(u,notNullValue());
         assertThat(u.getLastGroup(),notNullValue());
         assertThat(u.getLastGroup().getRestaurants(),notNullValue());
+        assertThat(u.getLastGroup().getUsers(),hasItem(u));
     }
 
     @Test
     public void oldUserWithoutInvite() throws Exception {
-        User u = mock(User.class);
-        when(u.getLastGroup()).thenReturn(mock(Group.class));
-        String userSessionId = "oldUserSessionId";
+        User u = new User("oldUser");
+        Group g = new Group("newGroup");
+        String userSessionId = "oldUser";
         usersMap.put(userSessionId, u);
         User user = userGroupService.getUser(userSessionId);
         assertThat(user,notNullValue());
         assertThat(user.getLastGroup(),notNullValue());
+        assertThat(user.getLastGroup().getUsers(),hasItem(u));
     }
 
     @Test
@@ -96,21 +101,21 @@ public class UserGroupServiceImplTest {
         String inviteId = "inviteId";
         String oldGroupId = "oldGroupId";
         String newGroupId = "newGroupId";
-        User u = mock(User.class);
-        Group oldGroup = mock(Group.class);
-        Group newGroup = mock(Group.class);
-        when(oldGroup.getId()).thenReturn(oldGroupId);
-        when(newGroup.getId()).thenReturn(newGroupId);
-        when(u.getLastGroup()).thenReturn(oldGroup);
-        when(u.getLastGroup()).thenReturn(mock(Group.class));
+        User u = new User(userSessionId);
+        Group oldGroup = new Group(oldGroupId);
+        Group newGroup = new Group(newGroupId);
         groupMap.put(oldGroupId, oldGroup);
         groupMap.put(newGroupId, newGroup);
+        u.setLastGroup(oldGroup);
+        oldGroup.getUsers().add(u);
         invites.put(inviteId, newGroup);
         usersMap.put(userSessionId, u);
 
         userGroupService.applyInvite(userSessionId, inviteId);
 
-        verify(u, times(1)).setLastGroup(newGroup);
+        assertNotNull(u.getLastGroup());
+        assertThat(u.getLastGroup().getUsers(),hasItem(u));
+        assertThat(oldGroup.getUsers(), not(hasItem(u)));
     }
 
 
@@ -125,7 +130,7 @@ public class UserGroupServiceImplTest {
 
 
     @Test(expected = InvitationNotFoundException.class)
-    public void testapplyInfiveForNonExistingInvite() throws Exception {
+    public void testapplyInviteForNonExistingInvite() throws Exception {
         User user = userGroupService.createNewUser();
         String notExistingInviteId = "notExistingInviteId";
         if(invites.remove(notExistingInviteId)!=null){
