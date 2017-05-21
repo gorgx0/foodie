@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by gorg on 11.04.17.
  */
-@ToString
+@ToString(exclude = {"users"})
 public class Group {
 
     @Getter
