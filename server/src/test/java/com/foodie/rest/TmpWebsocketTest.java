@@ -3,9 +3,12 @@ package com.foodie.rest;
 import com.foodie.Main;
 import com.foodie.auth.UserSessionFilter;
 import com.foodie.model.User;
+import com.foodie.services.UserGroupServiceImpl;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.websocket.api.*;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -22,13 +25,14 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.socket.*;
-import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.WebSocketConnectionManager;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 import javax.servlet.http.Cookie;
+import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -68,6 +72,10 @@ public class TmpWebsocketTest {
     @Mock
     private ListenableFutureCallback<WebSocketSession> callback;
 
+    @Autowired
+    private UserGroupServiceImpl userGroupService;
+
+
     public TmpWebsocketTest() throws URISyntaxException {
     }
 
@@ -75,7 +83,7 @@ public class TmpWebsocketTest {
     @Test
     public void testwebsocketPresence() throws Exception {
 
-        WebSocketClient webSocketClient = new StandardWebSocketClient();
+        StandardWebSocketClient webSocketClient = new StandardWebSocketClient();
         ListenableFuture<WebSocketSession> webSocketSessionListenableFuture = webSocketClient.doHandshake(webSocketHandler, null, WEBSOCKET_URI);
         webSocketSessionListenableFuture.addCallback(callback);
 
@@ -87,11 +95,16 @@ public class TmpWebsocketTest {
     public void testJettyWebsocketClient() throws Exception {
 
         ClientUpgradeRequest upgradeRequest = new ClientUpgradeRequest();
+        Object httpSession = upgradeRequest.getSession();
+        User newUser = userGroupService.createNewUser();
+        HttpCookie userCookie = new HttpCookie(UserSessionFilter.FOODIE_USER_COOKIE_NAME, newUser.getId());
         SimpleWebsocketClient websocketClient = new SimpleWebsocketClient();
-        org.eclipse.jetty.websocket.client.WebSocketClient client = new org.eclipse.jetty.websocket.client.WebSocketClient();
+        upgradeRequest.setCookies(Arrays.asList(userCookie));
+        WebSocketClient client = new WebSocketClient();
         client.start();
         Future<Session> connect = client.connect(websocketClient,new URI("ws://localhost:8080/websocket"), upgradeRequest);
         Session session = connect.get(1, TimeUnit.SECONDS);
+        assertNotNull(newUser.getWebSocketSession());
         session.close();
     }
 
