@@ -4,6 +4,8 @@ import com.foodie.Main;
 import com.foodie.auth.UserSessionFilter;
 import com.foodie.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jetty.websocket.api.*;
+import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -28,6 +30,8 @@ import javax.servlet.http.Cookie;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.mockito.Matchers.any;
@@ -80,18 +84,42 @@ public class TmpWebsocketTest {
     }
 
     @Test
-    public void testWebsocketHandler() throws Exception {
+    public void testJettyWebsocketClient() throws Exception {
 
-        MockHttpSession session = new MockHttpSession();
-        MvcResult mvcResult = mockMvc.perform(get("/restaurants").session(session)).andExpect(status().isOk()).andReturn();
-        User user = (User) session.getAttribute(UserSessionFilter.FOODIE_USER);
-        assertNotNull(user);
-
-        StandardWebSocketClient webSocketClient = new StandardWebSocketClient();
-        WebSocketConnectionManager webSocketConnectionManager = new WebSocketConnectionManager(webSocketClient, webSocketHandler, WEBSOCKET_URI_STRING, user);
-        webSocketConnectionManager.start();
-        webSocketConnectionManager.
-        verify(webSocketHandler,timeout(1000)).afterConnectionEstablished(any(WebSocketSession.class));
+        ClientUpgradeRequest upgradeRequest = new ClientUpgradeRequest();
+        SimpleWebsocketClient websocketClient = new SimpleWebsocketClient();
+        org.eclipse.jetty.websocket.client.WebSocketClient client = new org.eclipse.jetty.websocket.client.WebSocketClient();
+        client.start();
+        Future<Session> connect = client.connect(websocketClient,new URI("ws://localhost:8080/websocket"), upgradeRequest);
+        Session session = connect.get(1, TimeUnit.SECONDS);
+        session.close();
     }
 
+    class SimpleWebsocketClient implements WebSocketListener {
+
+        @Override
+        public void onWebSocketBinary(byte[] payload, int offset, int len) {
+            LOGGER.info("onWebSocketBinary: {}", payload);
+        }
+
+        @Override
+        public void onWebSocketText(String message) {
+            LOGGER.info("onWebSocketText: {}",message);
+        }
+
+        @Override
+        public void onWebSocketClose(int statusCode, String reason) {
+            LOGGER.info("onWebSocketClose: {}", reason);
+        }
+
+        @Override
+        public void onWebSocketConnect(Session session) {
+            LOGGER.info("onWebSocketConnect: {}", session);
+        }
+
+        @Override
+        public void onWebSocketError(Throwable cause) {
+            LOGGER.error("onWebSocketError: ",cause);
+        }
+    }
 }
