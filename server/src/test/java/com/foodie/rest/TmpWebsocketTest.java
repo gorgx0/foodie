@@ -9,11 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.websocket.api.*;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
@@ -48,17 +50,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by gorg on 17.05.17.
  */
-
-@Slf4j
 @RunWith(SpringRunner.class)
-//@SpringBootTest(classes = Main.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-//@WebAppConfiguration
+@Slf4j
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class TmpWebsocketTest {
 
-    private final String WEBSOCKET_URI_STRING = "ws://lwocalhost:8080/websocket";
-    private final URI WEBSOCKET_URI = new URI(WEBSOCKET_URI_STRING);
+    private String WEBSOCKET_URI_STRING = null ;
+    private URI WEBSOCKET_URI = null;
+
+    @Value("${local.server.port}")
+    private int port;
 
     @Autowired
     private WebApplicationContext context;
@@ -79,16 +81,10 @@ public class TmpWebsocketTest {
     public TmpWebsocketTest() throws URISyntaxException {
     }
 
-
-    @Test
-    public void testwebsocketPresence() throws Exception {
-
-        StandardWebSocketClient webSocketClient = new StandardWebSocketClient();
-        ListenableFuture<WebSocketSession> webSocketSessionListenableFuture = webSocketClient.doHandshake(webSocketHandler, null, WEBSOCKET_URI);
-        webSocketSessionListenableFuture.addCallback(callback);
-
-        verify(webSocketHandler, timeout(1000)).afterConnectionEstablished(any(WebSocketSession.class));
-        verify(callback, timeout(1000)).onSuccess(any(WebSocketSession.class));
+    @Before
+    public void setUp() throws Exception {
+        WEBSOCKET_URI_STRING = "ws://localhost:" + port + "/websocket";
+        WEBSOCKET_URI = new URI(WEBSOCKET_URI_STRING);
     }
 
     @Test
@@ -102,7 +98,7 @@ public class TmpWebsocketTest {
         upgradeRequest.setCookies(Arrays.asList(userCookie));
         WebSocketClient client = new WebSocketClient();
         client.start();
-        Future<Session> connect = client.connect(websocketClient,new URI("ws://localhost:8080/websocket"), upgradeRequest);
+        Future<Session> connect = client.connect(websocketClient,WEBSOCKET_URI, upgradeRequest);
         Session session = connect.get(1, TimeUnit.SECONDS);
         assertNotNull(newUser.getWebSocketSession());
         session.close();
