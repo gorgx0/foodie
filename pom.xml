@@ -17,6 +17,8 @@
         <spring-boot-dependencies.version>1.5.2.RELEASE</spring-boot-dependencies.version>
         <spock.version>1.1-groovy-2.4-rc-4</spock.version>
         <groovy-all.version>2.4.10</groovy-all.version>
+        <cucumber-junit.version>2.1.0</cucumber-junit.version>
+        <junit.version>4.12</junit.version>
     </properties>
 
 
@@ -24,6 +26,7 @@
         <module>server</module>
         <module>model</module>
         <module>client</module>
+        <module>functionaltests</module>
     </modules>
 
     <dependencyManagement>
@@ -95,6 +98,19 @@
                 <version>${spring-boot-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.cucumber</groupId>
+                <artifactId>cucumber-junit</artifactId>
+                <version>${cucumber-junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.cucumber</groupId>
+                <artifactId>cucumber-java8</artifactId>
+                <version>${cucumber-junit.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>
